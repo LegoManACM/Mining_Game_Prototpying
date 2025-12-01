@@ -3,6 +3,8 @@
 # 1 rock
 # 2 iron
 # 3 gold
+# 4 - 10 ores
+# 11 heli
 
 class MiningLayer:
 
@@ -15,6 +17,8 @@ class MiningLayer:
             self.name = "iron"
         elif(self.material == 3):
             self.name = "gold"
+        elif(self.material == 11):
+            self.name = "heli"
 
     def __init__(self, known, material):
         self.known = known

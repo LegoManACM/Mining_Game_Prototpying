@@ -5,8 +5,5 @@ from game import Game
 
 game = Game(5)
 
-playing = True
-while playing:
-
-    game.playGame()
+game.playGame()
 
