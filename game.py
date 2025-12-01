@@ -41,6 +41,13 @@ class Game:
         self.gameLoopState = 0
         self.playing = True
 
+    def countOut(self):
+        print("\nClosing In:")
+        for i in range(5):
+            print(" [" + str(5-i) + "]", end="\r")
+            sleep(1)
+        self.playing = False
+
     def damageShip(self, amount):
         self.shipIntegrity -= amount
         if(self.shipIntegrity <= 0):
@@ -49,7 +56,7 @@ class Game:
     def presentMiningLayers(self):
         toReturn = ""
         for layer in self.asteroid.layers:
-            toReturn += ("[" + layer.getPrintout() + "]")
+            toReturn += ("[ " + layer.getPrintout() + " ]")
             toReturn += "\n"
         return(toReturn)
 
@@ -71,10 +78,10 @@ class Game:
             rows = len(linesActions)
         
         for i in range(0, rows):
-            toPrint += "|  "
+            toPrint += "| "
             if(i < len(linesLayers)):
                 toPrint += linesLayers[i]
-            toPrint += "  |  "
+            toPrint += " |  "
             if(i < len(linesActions)):
                 toPrint += linesActions[i]
             toPrint += "\n"
@@ -86,7 +93,7 @@ class Game:
         os.system('cls')
         print("\n\n\n")
         print("[Please enter an integer 0 - " + str(len(self.actions) - 1) + "]")
-        sleep(5)
+        sleep(1)
 
     def doActionLoop(self):
         cInput = ""
@@ -110,17 +117,8 @@ class Game:
 
     def doGameLoop(self):
         if(self.gameLoopState == -1):
-            print("Ship Destroyed\nGame Over\n\nClosing in:\n5")
-            sleep(1)
-            print("4")
-            sleep(1)
-            print("3")
-            sleep(1)
-            print("2")
-            sleep(1)
-            print("1")
-            sleep(1)
-            self.playing = False
+            print("Ship Destroyed\nGame Over")
+            self.countOut()
         elif(self.gameLoopState == 0):   # choose mining action
             os.system('cls')
             self.gameLoopState += 1     
@@ -146,22 +144,12 @@ class Game:
                     print("\n\nStruck By Gas Pocket")
                     sleep(3)
                 else:
-                    self.gameLoopState = 0
-                    
+                    self.gameLoopState = 0     
 
             #self.gameLoopState = 0
         elif(self.gameLoopState == 4):
-            print("Asteroid complete\nClosing in:\n5")
-            sleep(1)
-            print("4")
-            sleep(1)
-            print("3")
-            sleep(1)
-            print("2")
-            sleep(1)
-            print("1")
-            sleep(1)
-            self.playing = False
+            print("Asteroid complete")
+            self.countOut()
 
     def playGame(self):
         self.playing = True
