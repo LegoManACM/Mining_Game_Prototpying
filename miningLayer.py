@@ -6,19 +6,24 @@
 # 4 - 10 ores
 # 11 heli
 
+def nameFromLayerID(material):
+    if(material == 0):
+        return("none")
+    elif(material == 1):
+        return("rock")
+    elif(material == 2):
+        return("iron")
+    elif(material == 3):
+        return("gold")
+    elif(material == 11):
+        return("heli")
+    else:
+        return(-1)
+
 class MiningLayer:
 
     def update(self):
-        if(self.material == 0):
-            self.name = "none"
-        elif(self.material == 1):
-            self.name = "rock"
-        elif(self.material == 2):
-            self.name = "iron"
-        elif(self.material == 3):
-            self.name = "gold"
-        elif(self.material == 11):
-            self.name = "heli"
+        self.name = nameFromLayerID(self.material)
 
     def __init__(self, known, material):
         self.known = known

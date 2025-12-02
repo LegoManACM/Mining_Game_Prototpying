@@ -14,4 +14,4 @@ class MiningActionScan:
                 if(i < len(game.asteroid.layers)):
                     modifiedLayers[i].known = True
             
-        return(modifiedLayers)
+        return(modifiedLayers, [])

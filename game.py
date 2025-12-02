@@ -1,5 +1,6 @@
 from asteroid import Asteroid
 from miningLayer import MiningLayer
+from miningLayer import nameFromLayerID
 
 from miningAction import MiningAction
 from miningActionDrill import MiningActionDrill
@@ -40,6 +41,9 @@ class Game:
         self.setupGame()
         self.gameLoopState = 0
         self.playing = True
+        self.shipInventory = []
+        self.storageInventory = []
+        self.money = 0
 
     def countOut(self):
         print("\nClosing In:")
@@ -111,8 +115,23 @@ class Game:
                         self.inputErrorMessage()
             else:
                 self.inputErrorMessage()
-                
-        self.asteroid.layers = self.actions[cInput].use(self)
+
+        itemUse = self.actions[cInput].use(self)
+
+        self.asteroid.layers = itemUse[0]
+
+        self.shipInventory.extend(itemUse[1])
+
+    def doHaulPrintout(self):
+        os.system('cls')
+        print("Collected:\n")
+        resources = []
+        toPrint = ""
+        for i in [0,1,2,3,11]:
+            ofTypei = [x for x in self.shipInventory if x == i]
+            resources.append(ofTypei)
+            toPrint += nameFromLayerID(i) + "-[" + str(len(ofTypei)) + "]\n"
+        print(toPrint)
 
 
     def doGameLoop(self):
@@ -149,6 +168,14 @@ class Game:
             #self.gameLoopState = 0
         elif(self.gameLoopState == 4):
             print("Asteroid complete")
+            sleep(3)
+            self.doHaulPrintout()
+            sleep(2)
+            input("Press return to continue...")
+            self.gameLoopState = 5
+
+
+        elif(self.gameLoopState == 5):
             self.countOut()
 
     def playGame(self):

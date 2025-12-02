@@ -13,4 +13,4 @@ class MiningActionBlast (MiningAction):
                 if(i < len(game.asteroid.layers)):
                     modifiedLayers[i].removeLayer()
 
-        return modifiedLayers
+        return modifiedLayers, []
