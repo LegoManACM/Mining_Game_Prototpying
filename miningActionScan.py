@@ -2,9 +2,10 @@ from miningLayer import MiningLayer
 
 class MiningActionScan:
 
-    def __init__(self, name, power):
+    def __init__(self, name, power, speed):
         self.name = name
         self.power = power
+        self.speed = speed
 
     def use(self, game):
         modifiedLayers = game.asteroid.layers
@@ -14,4 +15,4 @@ class MiningActionScan:
                 if(i < len(game.asteroid.layers)):
                     modifiedLayers[i].known = True
             
-        return(modifiedLayers, [])
+        return(modifiedLayers, [], self.speed)

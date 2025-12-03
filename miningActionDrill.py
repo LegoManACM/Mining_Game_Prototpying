@@ -13,4 +13,4 @@ class MiningActionDrill (MiningAction):
             collectedResources.append(modifiedLayers[toDrill].material)
             modifiedLayers[toDrill].removeLayer()
 
-        return modifiedLayers, collectedResources
+        return modifiedLayers, collectedResources, self.speed

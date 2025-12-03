@@ -15,6 +15,6 @@ class MiningActionPump (MiningAction):
                     collectedResources.append(modifiedLayers[toPump].material)
                     modifiedLayers[toPump].removeLayer()
                     modifiedLayers[toPump].known = True
-                    modifiedLayers[toPump].update()
+                    modifiedLayers[toPump].update() 
 
-        return modifiedLayers, collectedResources
+        return modifiedLayers, collectedResources, self.speed

@@ -29,7 +29,7 @@ class Game:
                         #MiningActionDrill("Advanced Drill", 1),
                         MiningActionBlast("Standard Blast", 2),
                         #MiningActionBlast("Advanced Blast", 5),
-                        MiningActionScan("Standard Scan",   2),
+                        MiningActionScan("Standard Scan", 2, 2),
                         MiningActionPump("Standard Pump", 1)]
                         
 
@@ -42,8 +42,9 @@ class Game:
         self.gameLoopState = 0
         self.playing = True
         self.shipInventory = []
+        self.maxShipInventory = 5
         self.storageInventory = []
-        self.money = 0
+        self.money = 10
 
     def countOut(self):
         print("\nClosing In:")
@@ -58,9 +59,13 @@ class Game:
             self.gameLoopState = -1
 
     def presentMiningLayers(self):
+        topLayer = self.asteroid.getFirstSolid()
         toReturn = ""
-        for layer in self.asteroid.layers:
-            toReturn += ("[ " + layer.getPrintout() + " ]")
+        for i in range(len(self.asteroid.layers) - 1):
+            capsulePrint = " [ ", " ] "
+            if(i == topLayer):
+                capsulePrint = ">[ ", " ]<"
+            toReturn += (capsulePrint[0] + self.asteroid.layers[i].getPrintout() + capsulePrint[1])
             toReturn += "\n"
         return(toReturn)
 
@@ -91,6 +96,8 @@ class Game:
             toPrint += "\n"
 
         print(toPrint)
+        sleep(0.5)
+        print("Current Turn: " + str(self.currentTurn) + "/" + str(self.turns))
 
 
     def inputErrorMessage(self):
@@ -117,8 +124,10 @@ class Game:
                 self.inputErrorMessage()
 
         itemUse = self.actions[cInput].use(self)
-
-        self.asteroid.layers = itemUse[0]
+        newLayers = itemUse[0]
+        turnsTaken = itemUse[2]
+        self.currentTurn += turnsTaken
+        self.asteroid.layers = newLayers
 
         self.shipInventory.extend(itemUse[1])
 
@@ -127,7 +136,7 @@ class Game:
         print("Collected:\n")
         resources = []
         toPrint = ""
-        for i in [0,1,2,3,11]:
+        for i in [1,2,3,11]:
             ofTypei = [x for x in self.shipInventory if x == i]
             resources.append(ofTypei)
             toPrint += nameFromLayerID(i) + "-[" + str(len(ofTypei)) + "]\n"
@@ -138,10 +147,10 @@ class Game:
         if(self.gameLoopState == -1):
             print("Ship Destroyed\nGame Over")
             self.countOut()
-        elif(self.gameLoopState == 0):   # choose mining action
+        elif(self.gameLoopState == 0):   # clear screen
             os.system('cls')
             self.gameLoopState += 1     
-        elif(self.gameLoopState == 1): # collect resources
+        elif(self.gameLoopState == 1): # take action
             self.doActionLoop()    
             self.gameLoopState = 2
         elif(self.gameLoopState == 2): # wrap-up
@@ -149,11 +158,10 @@ class Game:
             if(first != -1):
                 self.asteroid.layers[first].known = True
                 self.asteroid.layers[first].update()
-                self.gameLoopState = 3
-            else:
-                self.gameLoopState = 4
-        elif(self.gameLoopState == 3):
+            self.gameLoopState = 3
+        elif(self.gameLoopState == 3): # check for gas leakage
             first = self.asteroid.getFirstSolid()
+            self.gameLoopState = 4  
             if(first != -1):
                 if(self.asteroid.layers[first].material == 11):
                     self.gameLoopState = 2
@@ -162,20 +170,18 @@ class Game:
                     self.asteroid.layers[first].update()
                     print("\n\nStruck By Gas Pocket")
                     sleep(3)
-                else:
-                    self.gameLoopState = 0     
-
-            #self.gameLoopState = 0
         elif(self.gameLoopState == 4):
+            if(self.asteroid.fullyMined() == True or self.currentTurn >= self.turns):
+                self.gameLoopState = -2
+            else:
+                self.gameLoopState = 0
+                       
+        elif(self.gameLoopState == -2):
             print("Asteroid complete")
             sleep(3)
             self.doHaulPrintout()
             sleep(2)
             input("Press return to continue...")
-            self.gameLoopState = 5
-
-
-        elif(self.gameLoopState == 5):
             self.countOut()
 
     def playGame(self):
