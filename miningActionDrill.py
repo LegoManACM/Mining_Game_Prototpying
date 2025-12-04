@@ -2,8 +2,7 @@ from miningAction import MiningAction
 class MiningActionDrill (MiningAction):
 
     def __init__(self, name, speed):
-        super().__init__(name)
-        self.speed = speed
+        super().__init__(name, speed)
 
     def use(self, game):
         collectedResources = []

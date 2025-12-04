@@ -1,11 +1,11 @@
+from miningAction import MiningAction
 from miningLayer import MiningLayer
 
-class MiningActionScan:
+class MiningActionScan(MiningAction):
 
-    def __init__(self, name, power, speed):
-        self.name = name
+    def __init__(self, name, speed, power):
+        super().__init__(name, speed)
         self.power = power
-        self.speed = speed
 
     def use(self, game):
         modifiedLayers = game.asteroid.layers

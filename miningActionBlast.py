@@ -1,8 +1,8 @@
 from miningAction import MiningAction
 class MiningActionBlast (MiningAction):
 
-    def __init__(self, name, power):
-        super().__init__(name)
+    def __init__(self, name, speed, power):
+        super().__init__(name, speed)
         self.power = power
 
     def use(self, game):

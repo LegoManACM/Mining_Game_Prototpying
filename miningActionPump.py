@@ -2,7 +2,7 @@ from miningAction import MiningAction
 class MiningActionPump (MiningAction):
 
     def __init__(self, name, speed):
-        super().__init__(name)
+        super().__init__(name, speed)
         self.speed = speed
 
     def use(self, game):

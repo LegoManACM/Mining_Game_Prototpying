@@ -27,7 +27,7 @@ class Game:
 
         self.actions = [MiningActionDrill("Standard Drill", 1),
                         #MiningActionDrill("Advanced Drill", 1),
-                        MiningActionBlast("Standard Blast", 2),
+                        MiningActionBlast("Standard Blast", 1, 2),
                         #MiningActionBlast("Advanced Blast", 5),
                         MiningActionScan("Standard Scan", 2, 2),
                         MiningActionPump("Standard Pump", 1)]
@@ -65,7 +65,7 @@ class Game:
             capsulePrint = " [ ", " ] "
             if(i == topLayer):
                 capsulePrint = ">[ ", " ]<"
-            toReturn += (capsulePrint[0] + self.asteroid.layers[i].getPrintout() + capsulePrint[1])
+            toReturn += (str(i) + capsulePrint[0] + self.asteroid.layers[i].getPrintout() + capsulePrint[1])
             toReturn += "\n"
         return(toReturn)
 
@@ -73,7 +73,7 @@ class Game:
         toReturn = ""
         toReturn += "Mounted Equiptment"
         for i in range(0, len(self.actions)):
-            toReturn += ("\n>>-> " + str(i) + " " + self.actions[i].name)
+            toReturn += ("\n" + str(i + 1) + " " + self.actions[i].getPrint())
         return(toReturn)
 
     def presentMiningMenu(self):
@@ -113,17 +113,19 @@ class Game:
             os.system('cls')
             self.presentMiningMenu()
             cInput = input("\nSelect Equiptment:\n     ")
+            inputDig = 0
             if(cInput.isdigit()):
-                if(int(cInput) != None):
-                    if(int(cInput) < len(self.actions) and int(cInput) >= 0):
+                inputDig = int(cInput) - 1
+                if(inputDig != None):
+                    if(inputDig < len(self.actions) and inputDig >= 0):
                         deliberating = False
-                        cInput = int(cInput)
+                        cInput = inputDig
                     else:
                         self.inputErrorMessage()
             else:
                 self.inputErrorMessage()
 
-        itemUse = self.actions[cInput].use(self)
+        itemUse = self.actions[inputDig].use(self)
         newLayers = itemUse[0]
         turnsTaken = itemUse[2]
         self.currentTurn += turnsTaken
@@ -158,6 +160,8 @@ class Game:
             if(first != -1):
                 self.asteroid.layers[first].known = True
                 self.asteroid.layers[first].update()
+            os.system('cls')
+            self.presentMiningMenu()
             self.gameLoopState = 3
         elif(self.gameLoopState == 3): # check for gas leakage
             first = self.asteroid.getFirstSolid()
