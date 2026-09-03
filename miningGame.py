@@ -11,9 +11,9 @@ from miningActionPump import MiningActionPump
 from time import sleep
 import os
 
-class Game:
+class MiningGame:
 
-    def setupGame(self):
+    def setupGame(self, turns, asteroid, shipIntegrity):
         layers = [MiningLayer(True,  0),
                   MiningLayer(True,  1),
                   MiningLayer(False, 11),
@@ -24,6 +24,8 @@ class Game:
                   MiningLayer(False, 3)]
 
         self.asteroid = Asteroid(layers)
+        self.shipIntegrity = shipIntegrity
+        self.turns = turns
 
         self.actions = [MiningActionDrill("Standard Drill", 1),
                         #MiningActionDrill("Advanced Drill", 1),
@@ -34,11 +36,10 @@ class Game:
                         
 
 
-    def __init__(self, turns):
-        self.turns = turns
+    def __init__(self):
         self.currentTurn = 0
         self.shipIntegrity = 3
-        self.setupGame()
+        #self.setupGame()
         self.gameLoopState = 0
         self.playing = True
         self.shipInventory = []
@@ -103,7 +104,7 @@ class Game:
     def inputErrorMessage(self):
         os.system('cls')
         print("\n\n\n")
-        print("[Please enter an integer 0 - " + str(len(self.actions) - 1) + "]")
+        print("[Please enter an integer 1 - " + str(len(self.actions)) + "]")
         sleep(1)
 
     def doActionLoop(self):
@@ -188,10 +189,12 @@ class Game:
             input("Press return to continue...")
             self.countOut()
 
-    def playGame(self):
+    def playGame(self, turns, asteroid, shipIntegrity):
         self.playing = True
         while self.playing:
             self.doGameLoop()
+        
+        return(self.shipInventory, self.shipIntegrity)
 
 
 
